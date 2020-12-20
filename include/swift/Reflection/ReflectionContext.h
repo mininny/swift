@@ -577,9 +577,9 @@ public:
   /// metadata as its isa pointer.
   const TypeInfo *getMetadataTypeInfo(StoredPointer MetadataAddress) {
     // See if we cached the layout already
-    auto found = Cache.find(MetadataAddress);
-    if (found != Cache.end())
-      return found->second;
+    if (Cache.contains(MetadataAddress)) {
+      return Cache[MetadataAddress];
+    }
 
     auto &TC = getBuilder().getTypeConverter();
 

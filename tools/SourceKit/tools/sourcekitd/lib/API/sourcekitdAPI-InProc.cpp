@@ -94,8 +94,7 @@ public:
   }
 
   SKDObjectRef get(sourcekitd_uid_t Key) const override {
-    auto it = Storage.find(Key);
-    return it != Storage.end() ? it->second : nullptr;
+    return Storage.contains(key) ? Storage[key] : nullptr;
   }
 
   bool 

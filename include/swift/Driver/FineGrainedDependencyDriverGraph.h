@@ -279,11 +279,10 @@ private:
 
   const driver::Job *getJob(Optional<std::string> swiftDeps) const {
     assert(swiftDeps.hasValue() && "Don't call me for expats.");
-    auto iter = jobsBySwiftDeps.find(swiftDeps.getValue());
-    assert(iter != jobsBySwiftDeps.end() && "All jobs should be tracked.");
-    assert(getSwiftDeps(iter->second) == swiftDeps.getValue() &&
+    assert(jobsBySwiftDeps.contains(swiftDeps.getValue()) && "All jobs should be tracked.");
+    assert(getSwiftDeps(jobsBySwiftDeps[swiftDeps.getValue()]) == swiftDeps.getValue() &&
            "jobsBySwiftDeps should be inverse of getSwiftDeps.");
-    return iter->second;
+    return jobsBySwiftDeps[swiftDeps.getValue()];
   }
 
   //============================================================================

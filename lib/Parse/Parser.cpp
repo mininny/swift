@@ -81,14 +81,13 @@ void tokenize(const LangOptions &LangOpts, const SourceManager &SM,
 
     // If the token has the same location as a reset location,
     // reset the token stream
-    auto F = ResetTokens.find(Tok);
-    if (F != ResetTokens.end()) {
-      assert(F->isNot(tok::string_literal));
+    if (ResetTokens.contains(Tok)) {
+      assert(ResetTokens[Tok]->isNot(tok::string_literal));
 
-      DestFunc(*F, ParsedTrivia(), ParsedTrivia());
+      DestFunc(*ResetTokens[Tok], ParsedTrivia(), ParsedTrivia());
 
       auto NewState = L.getStateForBeginningOfTokenLoc(
-          F->getLoc().getAdvancedLoc(F->getLength()));
+          ResetTokens[Tok]->getLoc().getAdvancedLoc(ResetTokens[Tok]->getLength()));
       L.restoreState(NewState);
       continue;
     }

@@ -1619,7 +1619,7 @@ class DocFieldParser {
 
 public:
   DocFieldParser(StringRef text) : ptr(text.begin()), end(text.end()) {
-    assert(text.rtrim().find('\n') == StringRef::npos &&
+    assert(!(text.rtrim().contains('\n')) &&
            "expected single line");
   }
 

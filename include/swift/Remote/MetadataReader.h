@@ -716,9 +716,8 @@ public:
   /// Given a remote pointer to metadata, attempt to turn it into a type.
   BuiltType readTypeFromMetadata(StoredPointer MetadataAddress,
                                  bool skipArtificialSubclasses = false) {
-    auto Cached = TypeCache.find(MetadataAddress);
-    if (Cached != TypeCache.end())
-      return Cached->second;
+    if (TypeCache.contains(MetadataAddress))
+      return TypeCache[MetadataAddress];
 
     // If we see garbage data in the process of building a BuiltType, and get
     // the same metadata address again, we will hit an infinite loop.
@@ -935,9 +934,8 @@ public:
     if (address == 0)
       return nullptr;
 
-    auto cached = ContextDescriptorCache.find(address);
-    if (cached != ContextDescriptorCache.end())
-      return ContextDescriptorRef(address, cached->second.get());
+    if (ContextDescriptorCache.contains(address))
+      return ContextDescriptorRef(address, ContextDescriptorCache[address].get());
 
     // Read the flags to figure out how much space we should read.
     ContextDescriptorFlags flags;
@@ -1580,9 +1578,8 @@ protected:
   }
 
   MetadataRef readMetadata(StoredPointer address) {
-    auto cached = MetadataCache.find(address);
-    if (cached != MetadataCache.end())
-      return MetadataRef(address, cached->second.get());
+    if (MetadataCache.contains(address))
+      return MetadataRef(address, MetadataCache[address].get());
 
     StoredPointer KindValue = 0;
     if (!Reader->readInteger(RemoteAddress(address), &KindValue))
@@ -2550,11 +2547,9 @@ private:
 
     // If we've skipped an artificial subclasses, check the cache at
     // the superclass.  (This also protects against recursion.)
-    if (skipArtificialSubclasses && metadata != origMetadata) {
-      auto it = TypeCache.find(getAddress(metadata));
-      if (it != TypeCache.end())
-        return it->second;
-    }
+    if (skipArtificialSubclasses && metadata != origMetadata)
+      if (TypeCache.contains(getAddress(metadata)))
+        return TypeCache[getAddress(metadata)];
 
     // Read the nominal type descriptor.
     ContextDescriptorRef descriptor = readContextDescriptor(descriptorAddress);

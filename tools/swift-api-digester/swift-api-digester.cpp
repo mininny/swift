@@ -486,8 +486,7 @@ class RemovedAddedNodeMatcher : public NodeMatcher, public MatchedNodeListener {
     static std::vector<std::string> SimpleNames = {"unit", "data", "log", "coding",
       "url", "name", "date", "datecomponents", "notification", "urlrequest",
       "personnamecomponents", "measurement", "dateinterval", "indexset"};
-    return std::find(SimpleNames.begin(), SimpleNames.end(), N) !=
-      SimpleNames.end();
+    return contains(SimpleNames, N);
   }
 
   static bool isSimilarName(StringRef L, StringRef R) {
@@ -2114,7 +2113,7 @@ void DiagnosisEmitter::handle(const SDKNodeDecl *Node, NodeAnnotation Anno) {
     // conforms to RawRepresentable in the later version of SDK, we show the
     // refine diagnostics message instead of showing the type alias has been
     // removed.
-    if (TypeAliasUpdateMap.find((SDKNode*)Node) != TypeAliasUpdateMap.end()) {
+    if (TypeAliasUpdateMap.contains((SDKNode*)Node)) {
       Node->emitDiag(SourceLoc(), diag::raw_type_change,
         Node->getAs<SDKNodeDeclTypeAlias>()->getUnderlyingType()->getPrintedName(),
         TypeAliasUpdateMap[(SDKNode*)Node]->getAs<SDKNodeDeclType>()->

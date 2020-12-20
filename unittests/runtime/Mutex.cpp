@@ -896,16 +896,16 @@ template <typename RW> void readWriteLockCacheExampleThreaded(RW &lock) {
         bool found = false;
 
         auto cacheLookupSection = [&] {
-          auto value = cache.find(key);
-          if (value == cache.end()) {
+          if (cache.contains(key)) { 
+            if (trace)
+              printf("Worker[%d] HIT for key = %d, value = %d.\n", i, key,
+                   cache[key]);
+            found = true; // cache hit, no need to grab write lock
+          } else {
             if (trace)
               printf("Worker[%d] miss for key = %d.\n", i, key);
             found = false; // cache miss, need to grab write lock
           }
-          if (trace)
-            printf("Worker[%d] HIT for key = %d, value = %d.\n", i, key,
-                   value->second);
-          found = true; // cache hit, no need to grab write lock
         };
 
         lock.withReadLock(cacheLookupSection);

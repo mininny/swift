@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     unsigned key;
     do {
       key = next();
-    } while (stdMap.find(key) != stdMap.end());
+    } while (stdMap.contains(key));
     return key;
   };
 

@@ -95,9 +95,8 @@ public:
   Memoizer() = default;
 
   Optional<ValueT> findExisting(KeyT key) {
-    auto iter = memos.find(key);
-    if (iter != memos.end())
-      return iter->second;
+    if (memos.contains(key))
+      return memos[key];
     return None;
   }
 
@@ -140,16 +139,17 @@ private:
 
 public:
   Optional<Value> find(const Key1 &k1, const Key2 &k2) const {
-    auto iter = map.find(k1);
-    if (iter == map.end())
-      return None;
-    auto iter2 = iter->second.find(k2);
-    return iter2 == iter->second.end() ? None : Optional<Value>(iter2->second);
+    if (map.contains(k1) && map[k1].contains(k2))
+      return Optional<Value>(map[k1][k2]);
+    
+    return None;
   }
 
   NullablePtr<const InnerMap> find(const Key1 &k1) const {
-    auto iter = map.find(k1);
-    return iter == map.end() ? nullptr : &iter->second;
+    if (map.contains(k1))
+      return &map[k1];
+
+    return nullptr;
   }
 
   /// The sought value must be present.
@@ -180,10 +180,9 @@ public:
   void forEachValueMatching(
       const Key1 &k1,
       function_ref<void(const Key2 &, const Value &)> fn) const {
-    const auto &iter = map.find(k1);
-    if (iter == map.end())
+    if (!(map.contains(k1)))
       return;
-    for (auto &p : iter->second)
+    for (auto &p : &map[k1])
       fn(p.first, p.second);
   }
 

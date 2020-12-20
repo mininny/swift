@@ -494,7 +494,7 @@ static std::string getPlistEntry(const llvm::Twine &Path, StringRef KeyName) {
   while (!Lines.empty()) {
     StringRef CurLine;
     std::tie(CurLine, Lines) = Lines.split('\n');
-    if (CurLine.find(Key) != StringRef::npos) {
+    if (CurLine.contains(Key)) {
       std::tie(CurLine, Lines) = Lines.split('\n');
       unsigned Begin = CurLine.find("<string>") + strlen("<string>");
       unsigned End = CurLine.find("</string>");
@@ -769,8 +769,8 @@ void ide::collectModuleNames(StringRef SDKPath,
                                std::vector<std::string> &Modules) {
   std::string SDKName = getSDKName(SDKPath);
   std::string lowerSDKName = StringRef(SDKName).lower();
-  bool isOSXSDK = StringRef(lowerSDKName).find("macosx") != StringRef::npos;
-  bool isDeviceOnly = StringRef(lowerSDKName).find("iphoneos") != StringRef::npos;
+  bool isOSXSDK = StringRef(lowerSDKName).contains("macosx");
+  bool isDeviceOnly = StringRef(lowerSDKName).contains("iphoneos");
   auto Mods = isOSXSDK ? getOSXModuleList() : getiOSModuleList();
   Modules.insert(Modules.end(), Mods.begin(), Mods.end());
   if (isDeviceOnly) {
