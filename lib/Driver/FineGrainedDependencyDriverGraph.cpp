@@ -469,10 +469,9 @@ void ModuleDepGraph::eraseNodeFromJob(ModuleDepGraphNode *n) {
 void ModuleDepGraph::forEachUseOf(
     const ModuleDepGraphNode *def,
     function_ref<void(ModuleDepGraphNode *)> fn) const {
-  auto iter = usesByDef.find(def->getKey());
-  if (iter == usesByDef.end())
+  if (!(usesByDef.contains(def->getKey())))
     return;
-  for (ModuleDepGraphNode *useNode : iter->second)
+  for (ModuleDepGraphNode *useNode : usesByDef[def->getKey()])
     fn(useNode);
   // Add in implicit interface->implementation dependency
   forCorrespondingImplementationOfProvidedInterface(def, fn);

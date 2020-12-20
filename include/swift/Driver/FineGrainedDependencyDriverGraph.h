@@ -278,9 +278,8 @@ private:
 
   const driver::Job *getJob(Optional<std::string> swiftDeps) const {
     assert(swiftDeps.hasValue() && "Don't call me for expats.");
-    auto iter = jobsBySwiftDeps.find(swiftDeps.getValue());
-    assert(iter != jobsBySwiftDeps.end() && "All jobs should be tracked.");
-    return iter->second;
+    assert(jobsBySwiftDeps.contains(swiftDeps.getValue()) && "All jobs should be tracked.");
+    return jobsBySwiftDeps[swiftDeps.getValue()];
   }
 
   //============================================================================

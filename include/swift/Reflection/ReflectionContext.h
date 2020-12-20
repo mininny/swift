@@ -684,9 +684,9 @@ public:
   getMetadataTypeInfo(StoredPointer MetadataAddress,
                       remote::TypeInfoProvider *ExternalTypeInfo) {
     // See if we cached the layout already
-    auto found = Cache.find(MetadataAddress);
-    if (found != Cache.end())
-      return found->second;
+    if (Cache.contains(MetadataAddress)) {
+      return Cache[MetadataAddress];
+    }
 
     auto &TC = getBuilder().getTypeConverter();
 

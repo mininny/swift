@@ -134,11 +134,10 @@ int RemanglerBase::findSubstitution(const SubstitutionEntry &entry) {
     return result - InlineSubstitutions;
 
   // Then search in OverflowSubstitutions.
-  auto it = OverflowSubstitutions.find(entry);
-  if (it == OverflowSubstitutions.end())
-    return -1;
-
-  return it->second;
+  if (OverflowSubstitutions.contains(entry))
+    return OverflowSubstitutions[entry];
+  
+  return -1;
 }
 
 void RemanglerBase::addSubstitution(const SubstitutionEntry &entry) {

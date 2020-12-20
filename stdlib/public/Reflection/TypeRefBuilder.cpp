@@ -107,9 +107,8 @@ lookupTypeWitness(const std::string &MangledTypeName,
   key.addString(MangledTypeName);
   key.addString(Member);
   key.addString(Protocol.str());
-  auto found = AssociatedTypeCache.find(key);
-  if (found != AssociatedTypeCache.end())
-    return found->second;
+  if (AssociatedTypeCache.contains(key))
+    return AssociatedTypeCache[key];
 
   // Cache missed - we need to look through all of the assocty sections
   // for all images that we've been notified about.
@@ -177,9 +176,8 @@ TypeRefBuilder::getFieldTypeInfo(const TypeRef *TR) {
     return nullptr;
 
   // Try the cache.
-  auto Found = FieldTypeInfoCache.find(MangledName);
-  if (Found != FieldTypeInfoCache.end())
-    return Found->second;
+  if (FieldTypeInfoCache.contains(MangledName))
+    return FieldTypeInfoCache[MangledName];
 
   // On failure, fill out the cache with everything we know about.
   std::vector<std::pair<std::string, const TypeRef *>> Fields;
@@ -195,9 +193,8 @@ TypeRefBuilder::getFieldTypeInfo(const TypeRef *TR) {
   }
 
   // We've filled the cache with everything we know about now. Try the cache again.
-  Found = FieldTypeInfoCache.find(MangledName);
-  if (Found != FieldTypeInfoCache.end())
-    return Found->second;
+  if (FieldTypeInfoCache.contains(MangledName))
+    return FieldTypeInfoCache[MangledName];
 
   return nullptr;
 }

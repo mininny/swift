@@ -299,7 +299,7 @@ getAnnotations(std::vector<NodeAnnotation> &Scratch) const {
 }
 
 bool SDKNode::isAnnotatedAs(NodeAnnotation Anno) const {
-  return Annotations.find(Anno) != Annotations.end();;
+  return Annotations.contains(Anno);
 }
 
 void SDKNode::preorderVisit(NodePtr Root, SDKNodeVisitor &Visitor) {
@@ -1863,7 +1863,7 @@ void SwiftDeclCollector::lookupVisibleDecls(ArrayRef<ModuleDecl *> Modules) {
   llvm::MapVector<NominalTypeDecl*, llvm::SmallVector<ExtensionDecl*, 4>> ExtensionMap;
   for (auto *D: KnownDecls) {
     if (auto *Ext = dyn_cast<ExtensionDecl>(D)) {
-      if (HandledExtensions.find(Ext) == HandledExtensions.end()) {
+      if (!HandledExtensions.contains(Ext)) {
         auto *NTD = Ext->getExtendedNominal();
         // Check if the extension is from other modules.
         if (!llvm::is_contained(Modules, NTD->getModuleContext())) {

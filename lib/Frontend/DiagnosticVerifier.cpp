@@ -128,7 +128,7 @@ findDiagnostic(std::vector<CapturedDiagnosticInfo> &CapturedDiagnostics,
 
     // Verify the classification and string.
     if (I->Classification != Expected.Classification ||
-        I->Message.find(Expected.MessageStr) == StringRef::npos)
+        !(I->Message.contains(Expected.MessageStr)))
       continue;
 
     // Okay, we found a match, hurray!
@@ -800,7 +800,7 @@ DiagnosticVerifier::Result DiagnosticVerifier::verifyFile(unsigned BufferID) {
       continue;
     }
 
-    if (I->Message.find(expectedDiagIter->MessageStr) == StringRef::npos) {
+    if (!(I->Message.contains(expectedDiagIter->MessageStr))) {
       auto StartLoc =
           SMLoc::getFromPointer(expectedDiagIter->MessageRange.begin());
       auto EndLoc = SMLoc::getFromPointer(expectedDiagIter->MessageRange.end());

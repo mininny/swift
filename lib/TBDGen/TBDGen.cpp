@@ -114,11 +114,10 @@ static Optional<uint8_t> getLinkerPlatformId(StringRef Platform) {
 }
 
 StringRef InstallNameStore::getInstallName(LinkerPlatformId Id) const {
-  auto It = PlatformInstallName.find((uint8_t)Id);
-  if (It == PlatformInstallName.end())
-    return InstallName;
+  if (PlatformInstallName.contains((uint8_t)Id))
+    return PlatformInstallName.[(uint8_t)Id];
   else
-    return It->second;
+    return InstallName;
 }
 
 void InstallNameStore::remark(ASTContext &Ctx, StringRef ModuleName) const {

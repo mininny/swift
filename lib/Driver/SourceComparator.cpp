@@ -86,10 +86,10 @@ SourceComparator::buildDAGOfSubsequences(
   for (auto i = regionsToCompare.start.lhs(); i < regionsToCompare.end.lhs();
        ++i) {
     // What lines in rhs does the ith line in lhs match?
-    auto iter = rhsMap.find(linesToCompare.lhs()[i].str());
-    if (iter == rhsMap.end())
+    auto comparingLine = linesToCompare.lhs()[i].str()
+    if (!(rhsMap.contains(comparingLine))) 
       continue; // no match in rhs
-    auto &res = iter->second;
+    auto &res = rhsMap[comparingLine];
     size_t lastJ = ~0;
     // For each match in rhs in reverse order
     for (auto j : llvm::reverse(res)) {

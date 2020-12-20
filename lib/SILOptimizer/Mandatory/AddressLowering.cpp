@@ -198,9 +198,8 @@ public:
   }
 
   unsigned getOrdinal(SILValue value) {
-    auto hashIter = valueHashMap.find(value);
-    assert(hashIter != valueHashMap.end() && "Missing SILValue");
-    return hashIter->second;
+    assert(valueHashMap.contains(value) && "Missing SILValue");
+    return valueHashMap[value];
   }
 
   ValueStorage &getStorage(SILValue value) {
